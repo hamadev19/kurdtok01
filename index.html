@@ -1,406 +1,84 @@
+
 <!DOCTYPE html>
 <html lang="ckb" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hama Dev — پرسیار و وەڵام</title>
-  <style>
-    * { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: #0f172a;
-      color: #f8fafc;
-      padding: 16px;
-      display: flex;
-      justify-content: center;
-    }
-    .container { width: 100%; max-width: 680px; }
-    .card {
-      background: #1e293b;
-      border: 1px solid #334155;
-      border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 16px;
-      box-shadow: 0 12px 28px rgba(0,0,0,0.35);
-    }
-    h1, h2, h3 { margin: 0 0 8px; }
-    p.sub { margin: 0 0 16px; color: #94a3b8; font-size: 14px; }
-    .tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 16px;
-      background: #0f172a;
-      padding: 6px;
-      border-radius: 10px;
-    }
-    .tab-btn {
-      flex: 1;
-      padding: 10px;
-      border: none;
-      border-radius: 8px;
-      background: transparent;
-      color: #94a3b8;
-      cursor: pointer;
-      font-weight: 700;
-    }
-    .tab-btn.active { background: #2563eb; color: #fff; }
-    .field { margin-bottom: 12px; }
-    label { display: block; margin-bottom: 6px; font-size: 14px; color: #cbd5e1; }
-    input, textarea {
-      width: 100%;
-      padding: 11px 12px;
-      border-radius: 10px;
-      border: 1px solid #475569;
-      background: #0f172a;
-      color: #fff;
-      font-size: 14px;
-    }
-    textarea { min-height: 80px; resize: vertical; }
-    input:focus, textarea:focus { outline: none; border-color: #3b82f6; }
-    .btn {
-      padding: 10px 14px;
-      border: none;
-      border-radius: 10px;
-      background: #2563eb;
-      color: #fff;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    .btn-full { width: 100%; }
-    .btn-green { background: #16a34a; }
-    .btn-red { background: #dc2626; }
-    .btn-gray { background: #475569; }
-    .hidden { display: none; }
-    .top-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .badge {
-      display: inline-block;
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 700;
-      background: #eab308;
-      color: #0f172a;
-    }
-    .badge.user { background: #0ea5e9; color: #fff; }
-    .qa-item {
-      background: #0f172a;
-      border: 1px solid #334155;
-      border-radius: 12px;
-      padding: 14px;
-      margin-top: 12px;
-    }
-    .qa-meta { font-size: 12px; color: #94a3b8; margin-bottom: 6px; }
-    .qa-q { font-size: 15px; font-weight: 600; margin-bottom: 10px; }
-    .qa-a {
-      background: rgba(22, 163, 74, 0.14);
-      border-right: 3px solid #22c55e;
-      padding: 10px 12px;
-      border-radius: 8px;
-      font-size: 14px;
-      color: #dcfce7;
-    }
-    .qa-pending { font-size: 13px; color: #fbbf24; font-style: italic; }
-    .msg {
-      margin-top: 10px;
-      padding: 9px 12px;
-      border-radius: 8px;
-      font-size: 13px;
-      display: none;
-    }
-    .msg.err { display: block; background: rgba(220,38,38,0.2); color: #fca5a5; }
-    .msg.ok { display: block; background: rgba(22,163,74,0.2); color: #86efac; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KurdTok</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#090909;color:white;
+ font-family:Arial,sans-serif;
+ display:flex;justify-content:center;
+ align-items:center;min-height:100vh;
+}
+.card{
+ width:90%;max-width:390px;
+ background:#181818;padding:30px;
+ border-radius:22px;text-align:center;
+}
+.logo{font-size:48px;font-weight:bold;color:#ff3155}
+h1{font-size:32px;margin:8px}
+p{color:#aaa}
+button,input{
+ width:100%;padding:14px;margin-top:13px;
+ border-radius:12px;font-size:16px;
+}
+button{border:0;cursor:pointer;font-weight:bold}
+.google{background:white;color:#222}
+.facebook{background:#1877f2;color:white}
+.guest{background:#ff3155;color:white}
+input{background:#292929;color:white;border:1px solid #444}
+#message{color:#22c55e}
+</style>
 </head>
 <body>
-  <div class="container">
+<div class="card">
+ <div class="logo">K</div>
+ <h1>KurdTok</h1>
+ <p>بەخێربێیت بۆ جیهانی ڤیدیۆی کوردی ❤️</p>
 
-    <!-- بەشی چوونە ژوورەوە و دروستکردنی ئەکاونت -->
-    <div class="card" id="authCard">
-      <h1>Hama Dev</h1>
-      <p class="sub">بچۆ ژوورەوە یان بەدڵی خۆت ئەکاونت دروست بکە بۆ پرسیار و وەڵام</p>
+ <button class="google" onclick="login('Google')">
+  بەردەوام بە لەگەڵ Google
+ </button>
 
-      <div class="tabs">
-        <button class="tab-btn active" id="tabLogin" onclick="switchTab('login')">چوونە ژوورەوە</button>
-        <button class="tab-btn" id="tabRegister" onclick="switchTab('register')">دروستکردنی ئەکاونت</button>
-      </div>
+ <button class="facebook" onclick="login('Facebook')">
+  بەردەوام بە لەگەڵ Facebook
+ </button>
 
-      <form id="loginForm" onsubmit="handleLogin(event)">
-        <div class="field">
-          <label>ناوی بەکارهێنەر</label>
-          <input type="text" id="loginUser" placeholder="بۆ نموونە: hama dev" required />
-        </div>
-        <div class="field">
-          <label>پاسۆرد</label>
-          <input type="password" id="loginPass" placeholder="پاسۆردەکەت بنووسە" required />
-        </div>
-        <button type="submit" class="btn btn-full">چوونە ژوورەوە</button>
-        <div id="loginMsg" class="msg"></div>
-      </form>
+ <button class="guest" onclick="showGuest()">
+  چوونەژوورەوە وەک میوان
+ </button>
 
-      <form id="registerForm" class="hidden" onsubmit="handleRegister(event)">
-        <div class="field">
-          <label>ناوی ئەکاونت (بەدڵی خۆت)</label>
-          <input type="text" id="regUser" placeholder="ناوێک هەڵبژێرە" required />
-        </div>
-        <div class="field">
-          <label>پاسۆرد</label>
-          <input type="password" id="regPass" placeholder="پاسۆردێک دابنێ" required />
-        </div>
-        <button type="submit" class="btn btn-full">دروستکردنی ئەکاونت</button>
-        <div id="regMsg" class="msg"></div>
-      </form>
-    </div>
+ <div id="guestBox" hidden>
+  <input id="username" placeholder="ناوی خۆت بنووسە">
+  <button class="guest" onclick="createAccount()">
+   دروستکردنی ئەکاونت
+  </button>
+ </div>
 
-    <!-- بەشی سەرەکی دوای چوونە ژوورەوە -->
-    <div id="mainApp" class="hidden">
-      <div class="card">
-        <div class="top-bar">
-          <div>
-            <span id="roleBadge" class="badge">بەکارهێنەر</span>
-            <h2 id="welcomeTitle" style="margin-top:6px;">بەخێربێیت</h2>
-          </div>
-          <button class="btn btn-gray" onclick="logout()">چوونە دەرەوە</button>
-        </div>
-      </div>
+ <p id="message"></p>
+</div>
 
-      <!-- فۆڕمی ناردنی پرسیار -->
-      <div class="card">
-        <h3>پرسیارێک بنووسە</h3>
-        <p class="sub">پرسیارەکەت بنووسە تا سەرۆک (hama dev) بیبینێت و وەڵامت بداتەوە</p>
-        <form onsubmit="submitQuestion(event)">
-          <div class="field">
-            <textarea id="questionInput" placeholder="پرسیارەکەت لێرە بنووسە..." required></textarea>
-          </div>
-          <button type="submit" class="btn">ناردنی پرسیار</button>
-          <div id="qaStatus" class="msg"></div>
-        </form>
-      </div>
-
-      <!-- لیستی پرسیار و وەڵامەکان -->
-      <div class="card">
-        <div class="top-bar">
-          <h3>پرسیار و وەڵامەکان</h3>
-        </div>
-        <div id="qaList"></div>
-      </div>
-    </div>
-
-  </div>
-
-  <script>
-    const OWNER_USER = "hama dev";
-    const OWNER_PASS = "pole 9";
-    const ACCOUNTS_KEY = "hamadev_github_users_v1";
-    const SESSION_KEY = "hamadev_github_session_v1";
-    const QA_KEY = "hamadev_github_qa_v1";
-
-    function getAccounts() {
-      return JSON.parse(localStorage.getItem(ACCOUNTS_KEY) || "[]");
-    }
-
-    function saveAccounts(list) {
-      localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(list));
-    }
-
-    function getSession() {
-      return JSON.parse(localStorage.getItem(SESSION_KEY) || "null");
-    }
-
-    function getQA() {
-      return JSON.parse(localStorage.getItem(QA_KEY) || "[]");
-    }
-
-    function saveQA(items) {
-      localStorage.setItem(QA_KEY, JSON.stringify(items));
-    }
-
-    function switchTab(tab) {
-      const isLogin = tab === "login";
-      document.getElementById("tabLogin").classList.toggle("active", isLogin);
-      document.getElementById("tabRegister").classList.toggle("active", !isLogin);
-      document.getElementById("loginForm").classList.toggle("hidden", !isLogin);
-      document.getElementById("registerForm").classList.toggle("hidden", isLogin);
-    }
-
-    function setMsg(id, text, type) {
-      const el = document.getElementById(id);
-      el.className = "msg " + type;
-      el.textContent = text;
-    }
-
-    function handleRegister(e) {
-      e.preventDefault();
-      const username = document.getElementById("regUser").value.trim();
-      const password = document.getElementById("regPass").value;
-
-      if (!username || !password) return;
-      if (username.toLowerCase() === OWNER_USER.toLowerCase()) {
-        return setMsg("regMsg", "ئەم ناوە تایبەتە بە سەرۆک.", "err");
-      }
-
-      const accounts = getAccounts();
-      if (accounts.some(a => a.username.toLowerCase() === username.toLowerCase())) {
-        return setMsg("regMsg", "ئەم ناوە پێشتر تۆمار کراوە.", "err");
-      }
-
-      accounts.push({ username, password });
-      saveAccounts(accounts);
-      localStorage.setItem(SESSION_KEY, JSON.stringify({ username, role: "user" }));
-      setMsg("regMsg", "ئەکاونتەکەت دروست کرا!", "ok");
-      showApp();
-    }
-
-    function handleLogin(e) {
-      e.preventDefault();
-      const username = document.getElementById("loginUser").value.trim();
-      const password = document.getElementById("loginPass").value;
-
-      if (username === OWNER_USER && password === OWNER_PASS) {
-        localStorage.setItem(SESSION_KEY, JSON.stringify({
-          username: OWNER_USER,
-          role: "owner"
-        }));
-        return showApp();
-      }
-
-      const found = getAccounts().find(
-        a => a.username.toLowerCase() === username.toLowerCase() && a.password === password
-      );
-
-      if (!found) {
-        return setMsg("loginMsg", "ناوی بەکارهێنەر یان پاسۆرد هەڵەیە.", "err");
-      }
-
-      localStorage.setItem(SESSION_KEY, JSON.stringify({
-        username: found.username,
-        role: "user"
-      }));
-      showApp();
-    }
-
-    function logout() {
-      localStorage.removeItem(SESSION_KEY);
-      document.getElementById("mainApp").classList.add("hidden");
-      document.getElementById("authCard").classList.remove("hidden");
-    }
-
-    function showApp() {
-      const session = getSession();
-      if (!session) return;
-
-      document.getElementById("authCard").classList.add("hidden");
-      document.getElementById("mainApp").classList.remove("hidden");
-
-      const isOwner = session.role === "owner";
-      const badge = document.getElementById("roleBadge");
-      badge.textContent = isOwner ? "سەرۆک (hama dev)" : "بەکارهێنەر";
-      badge.className = isOwner ? "badge" : "badge user";
-      document.getElementById("welcomeTitle").textContent = `بەخێربێیت، ${session.username}`;
-
-      renderQA();
-    }
-
-    function submitQuestion(e) {
-      e.preventDefault();
-      const session = getSession();
-      const input = document.getElementById("questionInput");
-      const question = input.value.trim();
-      if (!question || !session) return;
-
-      const items = getQA();
-      items.unshift({
-        id: Date.now().toString(),
-        author: session.username,
-        question,
-        answer: ""
-      });
-      saveQA(items);
-
-      input.value = "";
-      setMsg("qaStatus", "پرسیارەکەت تۆمار کرا!", "ok");
-      renderQA();
-    }
-
-    function submitAnswer(id) {
-      const session = getSession();
-      if (!session || session.role !== "owner") return;
-
-      const textarea = document.getElementById(`ans-${id}`);
-      const answer = textarea.value.trim();
-      if (!answer) return;
-
-      const items = getQA();
-      const idx = items.findIndex(x => x.id === id);
-      if (idx === -1) return;
-
-      items[idx].answer = answer;
-      saveQA(items);
-      renderQA();
-    }
-
-    function deleteItem(id) {
-      const session = getSession();
-      if (!session || session.role !== "owner") return;
-
-      const items = getQA().filter(x => x.id !== id);
-      saveQA(items);
-      renderQA();
-    }
-
-    function renderQA() {
-      const session = getSession();
-      const isOwner = session && session.role === "owner";
-      const listEl = document.getElementById("qaList");
-      const items = getQA();
-
-      if (items.length === 0) {
-        listEl.innerHTML = "<p class='sub'>هیچ پرسیارێک تۆمار نەکراوە.</p>";
-        return;
-      }
-
-      listEl.innerHTML = items.map(item => `
-        <div class="qa-item">
-          <div class="qa-meta">پرسیاری: <strong>${esc(item.author)}</strong></div>
-          <div class="qa-q">${esc(item.question)}</div>
-          ${
-            item.answer
-              ? `<div class="qa-a"><strong>وەڵامی hama dev:</strong><br/>${esc(item.answer)}</div>`
-              : `<div class="qa-pending">هێشتا وەڵام نەدراوەتەوە...</div>`
-          }
-          ${
-            isOwner
-              ? `
-                <div style="margin-top:10px;">
-                  <textarea id="ans-${item.id}" placeholder="وەڵامەکەت لێرە بنووسە..." style="min-height:60px; margin-bottom:8px;">${esc(item.answer || "")}</textarea>
-                  <div style="display:flex; gap:8px;">
-                    <button class="btn btn-green" onclick="submitAnswer('${item.id}')">پاشەکەوتکردنی وەڵام</button>
-                    <button class="btn btn-red" onclick="deleteItem('${item.id}')">سڕینەوە</button>
-                  </div>
-                </div>
-              `
-              : ""
-          }
-        </div>
-      `).join("");
-    }
-
-    function esc(str) {
-      return String(str).replace(/[&<>"']/g, m => ({
-        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-      }[m]));
-    }
-
-    if (getSession()) {
-      showApp();
-    }
-  </script>
+<script>
+function showGuest(){
+ document.getElementById('guestBox').hidden=false;
+}
+function createAccount(){
+ const name=document.getElementById('username').value.trim();
+ if(!name){
+  alert('تکایە ناوی خۆت بنووسە');
+  return;
+ }
+ localStorage.setItem('kurdTokName',name);
+ document.getElementById('message').innerText=
+ 'بەخێربێیت '+name+' ❤️';
+}
+function login(provider){
+ alert('بۆ چوونەژوورەوەی ڕاستەقینەی '+
+ provider+' پێویستە API پەیوەست بکرێت.');
+}
+</script>
 </body>
 </html>
