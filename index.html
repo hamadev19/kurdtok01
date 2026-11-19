@@ -3,78 +3,341 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>دروستکەری فایل - Hama Dev</title>
+  <title>Hama Dev — چوونە ژوورەوە و دروستکردنی ئەکاونت</title>
   <style>
+    * { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
     body {
-      font-family: sans-serif;
+      margin: 0;
+      min-height: 100vh;
       background: #0f172a;
       color: #f8fafc;
       display: flex;
-      justify-content: center;
       align-items: center;
-      min-height: 100vh;
-      margin: 0;
+      justify-content: center;
       padding: 16px;
     }
-    .box {
+    .card {
+      width: 100%;
+      max-width: 440px;
       background: #1e293b;
-      padding: 24px;
-      border-radius: 14px;
-      width: 100%;
-      max-width: 420px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-    }
-    h2 { margin-top: 0; font-size: 20px; }
-    input, textarea, button {
-      width: 100%;
-      box-sizing: border-box;
-      margin-top: 10px;
-      padding: 12px;
-      border-radius: 8px;
       border: 1px solid #334155;
-      font-size: 15px;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.4);
     }
-    input, textarea {
+    h1, h2 { margin: 0 0 8px; font-size: 22px; }
+    p.sub { margin: 0 0 20px; color: #94a3b8; font-size: 14px; }
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+      background: #0f172a;
+      padding: 6px;
+      border-radius: 10px;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
+      color: #94a3b8;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .tab-btn.active { background: #2563eb; color: #fff; }
+    .field { margin-bottom: 14px; }
+    label { display: block; margin-bottom: 6px; font-size: 14px; color: #cbd5e1; }
+    input {
+      width: 100%;
+      padding: 11px 12px;
+      border-radius: 10px;
+      border: 1px solid #475569;
       background: #0f172a;
       color: #fff;
+      font-size: 15px;
     }
-    textarea { height: 130px; resize: vertical; }
-    button {
+    input:focus { outline: none; border-color: #3b82f6; }
+    .btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
       background: #2563eb;
       color: #fff;
-      border: none;
-      font-weight: bold;
+      font-size: 15px;
+      font-weight: 700;
       cursor: pointer;
+    }
+    .btn:hover { background: #1d4ed8; }
+    .btn-danger { background: #dc2626; padding: 6px 10px; font-size: 12px; width: auto; border-radius: 7px; }
+    .btn-logout { background: #475569; margin-top: 14px; }
+    .msg {
+      margin-top: 12px;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 13px;
+      display: none;
+    }
+    .msg.error { display: block; background: rgba(220,38,38,0.2); color: #fca5a5; border: 1px solid #dc2626; }
+    .msg.ok { display: block; background: rgba(22,163,74,0.2); color: #86efac; border: 1px solid #16a34a; }
+    .hidden { display: none; }
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      background: #eab308;
+      color: #0f172a;
+      margin-bottom: 10px;
+    }
+    .badge.user { background: #0ea5e9; color: #fff; }
+    .box {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 14px;
       margin-top: 14px;
     }
-    button:hover { background: #1d4ed8; }
+    .user-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #1e293b;
+      font-size: 14px;
+    }
+    .user-item:last-child { border-bottom: none; }
   </style>
 </head>
 <body>
-  <div class="box">
-    <h2>دروستکردن و دابەزاندنی فایل</h2>
-    <input id="filename" type="text" placeholder="ناوی فایل (بۆ نموونە: note.txt یان data.json)" value="hello.txt" />
-    <textarea id="content" placeholder="ناوەڕۆکی فایلەکە لێرە بنووسە...">سڵاو، ئەم فایلە بە خۆکار دروست کراوە.</textarea>
-    <button onclick="createAndDownload()">دروستکردن و دابەزاندن</button>
+
+  <!-- بەشی چوونە ژوورەوە و دروستکردنی ئەکاونت -->
+  <div class="card" id="authSection">
+    <h1>Hama Dev</h1>
+    <p class="sub">بچۆ ژوورەوە یان بەدڵی خۆت ئەکاونتێک دروست بکە</p>
+
+    <div class="tabs">
+      <button class="tab-btn active" id="tabLogin" onclick="switchTab('login')">چوونە ژوورەوە</button>
+      <button class="tab-btn" id="tabRegister" onclick="switchTab('register')">دروستکردنی ئەکاونت</button>
+    </div>
+
+    <!-- فۆڕمی چوونە ژوورەوە -->
+    <form id="loginForm" onsubmit="handleLogin(event)">
+      <div class="field">
+        <label>ناوی بەکارهێنەر</label>
+        <input type="text" id="loginUser" placeholder="بۆ نموونە: hama dev" required />
+      </div>
+      <div class="field">
+        <label>پاسۆرد</label>
+        <input type="password" id="loginPass" placeholder="پاسۆردەکەت بنووسە" required />
+      </div>
+      <button type="submit" class="btn">چوونە ژوورەوە</button>
+      <div id="loginMsg" class="msg"></div>
+    </form>
+
+    <!-- فۆڕمی دروستکردنی ئەکاونت بەدڵی بەکارهێنەر -->
+    <form id="registerForm" class="hidden" onsubmit="handleRegister(event)">
+      <div class="field">
+        <label>ناوی ئەکاونت (بەدڵی خۆت)</label>
+        <input type="text" id="regUser" placeholder="ناوێک هەڵبژێرە" required />
+      </div>
+      <div class="field">
+        <label>پاسۆرد</label>
+        <input type="password" id="regPass" placeholder="پاسۆردێک دابنێ" required />
+      </div>
+      <div class="field">
+        <label>تێبینی یان ئارەزووی خۆت (ئارەزوومەندانە)</label>
+        <input type="text" id="regBio" placeholder="بۆ نموونە: گەیمینگ، AI، کۆد..." />
+      </div>
+      <button type="submit" class="btn">دروستکردنی ئەکاونت</button>
+      <div id="regMsg" class="msg"></div>
+    </form>
+  </div>
+
+  <!-- بەشی ناو سایت دوای چوونە ژوورەوە -->
+  <div class="card hidden" id="dashSection">
+    <span id="roleBadge" class="badge">بەکارهێنەر</span>
+    <h2 id="welcomeText">بەخێربێیت!</h2>
+    <p class="sub" id="bioText"></p>
+
+    <div class="box" id="ownerPanel" style="display:none;">
+      <h3 style="margin:0 0 10px; font-size:16px;">پانێڵی سەرۆک (hama dev)</h3>
+      <p class="sub" style="margin-bottom:10px;">ئەکاونتە دروستکراوەکان لەم وێبگەڕەدا:</p>
+      <div id="usersList"></div>
+    </div>
+
+    <button class="btn btn-logout" onclick="logout()">چوونە دەرەوە</button>
   </div>
 
   <script>
-    function createAndDownload() {
-      const name = document.getElementById("filename").value.trim() || "file.txt";
-      const text = document.getElementById("content").value;
+    const OWNER_USERNAME = "hama dev";
+    const OWNER_PASSWORD = "pole 9";
+    const STORAGE_KEY = "hamadev_accounts_v1";
+    const SESSION_KEY = "hamadev_session_v1";
 
-      const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
-      const url = URL.createObjectURL(blob);
-
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = name;
-      document.body.appendChild(a);
-      a.click();
-
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+    function getAccounts() {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
     }
+
+    function saveAccounts(accounts) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(accounts));
+    }
+
+    function switchTab(tab) {
+      const isLogin = tab === "login";
+      document.getElementById("tabLogin").classList.toggle("active", isLogin);
+      document.getElementById("tabRegister").classList.toggle("active", !isLogin);
+      document.getElementById("loginForm").classList.toggle("hidden", !isLogin);
+      document.getElementById("registerForm").classList.toggle("hidden", isLogin);
+      clearMsgs();
+    }
+
+    function clearMsgs() {
+      ["loginMsg", "regMsg"].forEach(id => {
+        const el = document.getElementById(id);
+        el.className = "msg";
+        el.textContent = "";
+      });
+    }
+
+    function showMsg(id, text, type) {
+      const el = document.getElementById(id);
+      el.className = "msg " + type;
+      el.textContent = text;
+    }
+
+    function handleRegister(e) {
+      e.preventDefault();
+      const username = document.getElementById("regUser").value.trim();
+      const password = document.getElementById("regPass").value;
+      const bio = document.getElementById("regBio").value.trim();
+
+      if (!username || !password) {
+        return showMsg("regMsg", "تکایە ناو و پاسۆرد پڕ بکەرەوە.", "error");
+      }
+
+      if (username.toLowerCase() === OWNER_USERNAME.toLowerCase()) {
+        return showMsg("regMsg", "ئەم ناوە تایبەتە بە سەرۆک و ناتوانرێت دووبارە دروست بکرێت.", "error");
+      }
+
+      const accounts = getAccounts();
+      const exists = accounts.some(acc => acc.username.toLowerCase() === username.toLowerCase());
+      if (exists) {
+        return showMsg("regMsg", "ئەم ناوە پێشتر تۆمار کراوە، ناوێکی تر هەڵبژێرە.", "error");
+      }
+
+      const newUser = { username, password, bio, createdAt: new Date().toLocaleDateString("ckb") };
+      accounts.push(newUser);
+      saveAccounts(accounts);
+
+      showMsg("regMsg", "ئەکاونتەکەت بە سەرکەوتوویی دروست کرا! ئێستا دەچیتە ژوورەوە...", "ok");
+      setTimeout(() => {
+        setSession({ username, role: "user", bio });
+        renderDashboard();
+      }, 700);
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const username = document.getElementById("loginUser").value.trim();
+      const password = document.getElementById("loginPass").value;
+
+      // پشکنینی ئەکاونتی سەرۆک
+      if (username === OWNER_USERNAME && password === OWNER_PASSWORD) {
+        setSession({ username: OWNER_USERNAME, role: "owner", bio: "سەرۆکی سیستەم و گەشەپێدەر" });
+        return renderDashboard();
+      }
+
+      // پشکنینی ئەکاونتەکانی تر
+      const accounts = getAccounts();
+      const found = accounts.find(
+        acc => acc.username.toLowerCase() === username.toLowerCase() && acc.password === password
+      );
+
+      if (!found) {
+        return showMsg("loginMsg", "ناوی بەکارهێنەر یان پاسۆرد هەڵەیە.", "error");
+      }
+
+      setSession({ username: found.username, role: "user", bio: found.bio || "" });
+      renderDashboard();
+    }
+
+    function setSession(data) {
+      localStorage.setItem(SESSION_KEY, JSON.stringify(data));
+    }
+
+    function logout() {
+      localStorage.removeItem(SESSION_KEY);
+      document.getElementById("dashSection").classList.add("hidden");
+      document.getElementById("authSection").classList.remove("hidden");
+      document.getElementById("loginForm").reset();
+      document.getElementById("registerForm").reset();
+      clearMsgs();
+    }
+
+    function deleteUser(username) {
+      const updated = getAccounts().filter(acc => acc.username !== username);
+      saveAccounts(updated);
+      renderUsersList();
+    }
+
+    function renderUsersList() {
+      const listEl = document.getElementById("usersList");
+      const accounts = getAccounts();
+      if (accounts.length === 0) {
+        listEl.innerHTML = "<p style='color:#94a3b8; font-size:13px;'>هیچ ئەکاونتێک دروست نەکراوە.</p>";
+        return;
+      }
+      listEl.innerHTML = accounts.map(acc => `
+        <div class="user-item">
+          <div>
+            <strong>${escapeHtml(acc.username)}</strong>
+            ${acc.bio ? `<div style="color:#94a3b8; font-size:12px;">${escapeHtml(acc.bio)}</div>` : ""}
+          </div>
+          <button class="btn btn-danger" onclick="deleteUser('${escapeAttr(acc.username)}')">سڕینەوە</button>
+        </div>
+      `).join("");
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, m => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      }[m]));
+    }
+
+    function escapeAttr(str) {
+      return String(str).replace(/'/g, "\\'");
+    }
+
+    function renderDashboard() {
+      const session = JSON.parse(localStorage.getItem(SESSION_KEY) || "null");
+      if (!session) return;
+
+      document.getElementById("authSection").classList.add("hidden");
+      document.getElementById("dashSection").classList.remove("hidden");
+
+      const badge = document.getElementById("roleBadge");
+      const isOwner = session.role === "owner";
+
+      badge.textContent = isOwner ? "سەرۆک (Owner)" : "بەکارهێنەر";
+      badge.className = isOwner ? "badge" : "badge user";
+
+      document.getElementById("welcomeText").textContent = `بەخێربێیت، ${session.username}!`;
+      document.getElementById("bioText").textContent = session.bio || "ئەکاونتەکەت چالاکە.";
+
+      const ownerPanel = document.getElementById("ownerPanel");
+      if (isOwner) {
+        ownerPanel.style.display = "block";
+        renderUsersList();
+      } else {
+        ownerPanel.style.display = "none";
+      }
+    }
+
+    // ئەگەر پێشتر چووبووە ژوورەوە، بیهێڵەرەوە
+    renderDashboard();
   </script>
 </body>
 </html>
