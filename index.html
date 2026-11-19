@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ckb" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>دروستکەری فایل - Hama Dev</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #0f172a;
+      color: #f8fafc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 16px;
+    }
+    .box {
+      background: #1e293b;
+      padding: 24px;
+      border-radius: 14px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    }
+    h2 { margin-top: 0; font-size: 20px; }
+    input, textarea, button {
+      width: 100%;
+      box-sizing: border-box;
+      margin-top: 10px;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #334155;
+      font-size: 15px;
+    }
+    input, textarea {
+      background: #0f172a;
+      color: #fff;
+    }
+    textarea { height: 130px; resize: vertical; }
+    button {
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 14px;
+    }
+    button:hover { background: #1d4ed8; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>دروستکردن و دابەزاندنی فایل</h2>
+    <input id="filename" type="text" placeholder="ناوی فایل (بۆ نموونە: note.txt یان data.json)" value="hello.txt" />
+    <textarea id="content" placeholder="ناوەڕۆکی فایلەکە لێرە بنووسە...">سڵاو، ئەم فایلە بە خۆکار دروست کراوە.</textarea>
+    <button onclick="createAndDownload()">دروستکردن و دابەزاندن</button>
+  </div>
+
+  <script>
+    function createAndDownload() {
+      const name = document.getElementById("filename").value.trim() || "file.txt";
+      const text = document.getElementById("content").value;
+
+      const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = name;
+      document.body.appendChild(a);
+      a.click();
+
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+  </script>
+</body>
+</html>
